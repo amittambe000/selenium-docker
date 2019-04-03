@@ -4,6 +4,7 @@ pipeline {
         stage('Build Jar') {
             steps {
                 bat "mvn clean package -DskipTests"
+                args '-v C:\AmitData\Stuff\Docker\jenkins-slave\maven-resources:/root/.m2'
             }
         }
         stage('Build Image') {
