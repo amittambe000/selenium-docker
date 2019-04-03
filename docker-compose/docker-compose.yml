@@ -1,0 +1,67 @@
+version:  "3"
+services:
+  hub:
+    image: selenium/hub:3.141.59
+    ports: 
+      - "4444:4444"
+  chrome:
+    image: selenium/node-chrome:3.141.59
+    depends_on: 
+      - hub
+    environment:
+      - HUB_HOST=hub
+  firefox:
+    image: selenium/node-firefox:3.141.59
+    shm_size: '1GB'
+    depends_on:
+      - hub
+    environment:
+      - HUB_HOST=hub
+  
+  search-module1:
+    image: amittambe000/selenium-docker
+    depends_on:
+     - firefox
+     - chrome
+    environment: 
+    - BROWSER=firefox
+    - HUB_HOST=hub
+    - MODULE=search-module.xml
+    volumes: 
+    - ./search-result_firefox:/usr/share/udemy/test-output
+
+  search-module2:
+    image: amittambe000/selenium-docker
+    depends_on:
+     - firefox
+     - chrome
+    environment: 
+    - BROWSER=chrome
+    - HUB_HOST=hub
+    - MODULE=search-module.xml
+    volumes: 
+    - ./search-result_chrome:/usr/share/udemy/test-output
+
+  book-flight-module1:
+    image: amittambe000/selenium-docker
+    depends_on:
+      - firefox
+      - chrome
+    environment:
+      - BROWSER=chrome
+      - HUB_HOST=hub
+      - MODULE=book-flight-module.xml
+    volumes:
+      - ./book-result_chrome:/usr/share/udemy/test-output
+      
+  book-flight-module2:
+    image: amittambe000/selenium-docker
+    depends_on:
+      - firefox
+      - chrome
+    environment:
+      - BROWSER=firefox
+      - HUB_HOST=hub
+      - MODULE=book-flight-module.xml
+    volumes:
+      - ./book-result_firefox:/usr/share/udemy/test-output
